@@ -27,6 +27,6 @@ Finally, `_generated` is the default ouput location once the configuration files
 
 ---
 Examples:
-* Single template
+* [Single template](https://github.com/Philip-Owen/config_generator/tree/single-template)
 * Multi template
 
