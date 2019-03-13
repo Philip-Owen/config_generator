@@ -4,7 +4,7 @@ This is a Python script built to model the way you can build configuration files
 different configuration tasks so I decided to condense those into a single and more modular codebase.
 
 * Built on Python 3+.
-* Uses Jinja2 for templating and is the only dependency for now. Run `pip install requirements.txt` to install it.
+* Uses Jinja2 for templating and is the only dependency for now. Run `pip install -r requirements.txt` to install it.
 
 
 #### ** This project in a nutshell **
