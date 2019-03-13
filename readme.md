@@ -1,32 +1,83 @@
 ## Configuration Generator
-
-This is a Python script built to model the way you can build configuration files in Ansible. I found myself creating too many scripts to perform 
-different configuration tasks so I decided to condense those into a single and more modular codebase.
-
-* Built on Python 3+.
-* Uses Jinja2 for templating and is the only dependency for now. Run `pip install -r requirements.txt` to install it.
-
-
-#### ** This project in a nutshell **
-The script looks for device names in the `inventory.txt` file and each device should be on it's own line.
-
-For every device listed in inventory, there needs to be a coresponding *.json* file in the hosts folder with the same name. 
-
-The hosts files are json objects that hold variables specific to each device listed in the inventory. These could be variables such as IP addresses, VLANs, device hostnames, etc. 
-* **FYI**, the device name used in the inventory file can be accessed in the templates with the variable name `inv_host`.
-
-The groups folder contains `main.json` which can contain variables that need to be shared between all devices in the inventory.
-
-A big part of this process is defining your templates. The script is looking for *.j2* files in the templates folder and will be applying both the hosts and group variables to create the config files. There are two ways you can define which template to use: 
-1. If you need to apply the same template to all the devices in inventory, define a template variable in the `groups/main.json` file.
-2. If you need a specific template for each device, define the template variable in each `hosts/*device*.json` file.
-
-As stated before, Jinja2 is being used to render templates so if you are unfamiliar I'd reccomend starting [here](http://jinja.pocoo.org/docs/2.10/). I will also be adding example branches to this repo so be sure to check the bottom of this page for the links to those. 
-
-Finally, `_generated` is the default ouput location once the configuration files have been generated. If this folder does not exist, it will be created before the files are built.
-
+### Single Template
 ---
-Examples:
-* Single template
-* Multi template
+
+In this example we'll use a single template to generate configuration files, containing the device hostname and a loopback interface, for multiple devices.
+
+Let's start by defining two devices in the `inventory.txt` file.
+```
+<!-- inventory.txt -->
+
+sw1
+sw2
+```
+We will now need to add two json files to the `hosts` folder to match what we just put in the inventory, `sw1.json` and `sw2.json`. 
+
+For each file let's add an object with a key named "loopback0". "loopback0" will contain an object with two keys, "ip" for the IP address and "snm" for the subnet mask of the network:
+```
+<!-- hosts/sw1.json -->
+
+{
+  "loopback0": {
+    "ip": "172.25.10.1",
+    "snm": "255.255.255.255"
+  }
+}
+
+
+<!-- hosts/sw2.json -->
+
+{
+  "loopback0": {
+    "ip": "172.25.10.2",
+    "snm": "255.255.255.255"
+  }
+}
+
+```
+Now we'll need to define a template to use. Create a Jinja2 file, `interfaces.j2` in the templates folder and add the following code:
+```
+<!-- templates/interfaces.j2 -->
+
+hostname {{ inv_host }}
+
+interface loopback0
+  ip address {{loopback0.ip}} {{loopback0.snm}}
+end
+
+```
+`{{ inv_host }}` will grab the inventory hostname we defined in the `inventory.txt` file and `{{ loopback0.ip }}` and `{{ loopback0.snm }}` will grab the variables we defined in each host file.
+
+So far we've defined our inventory, created our host file, and created a template. Now we'll need to let the script know what template to use. Since we want to use this template for all of our devices in the inventory we can set the templates variable in the  `groups/main.json` file.
+```
+<!-- groups/main.json -->
+
+{
+  "template": "interfaces.j2"
+}
+```
+The script now has all it needs to generate the configuration files. In the terminal lets run `python3 generate_config.py`.
+
+We should now have two files under `_generated`
+```
+_generated
+  sw1.cfg
+  sw2.cfg
+```
+```
+<!-- _generated/sw1.cfg -->
+hostname sw1
+
+interface loopback0
+  ip address 172.25.10.1 255.255.255.255
+end
+
+<!-- _generated/sw1.cfg  -->
+hostname sw2
+
+interface loopback0
+  ip address 172.25.10.2 255.255.255.255
+end
+```
+
 
