@@ -1,0 +1,28 @@
+{
+    "ce": {
+        "hostname": "ce-remote-site",
+        "as_number": 11111
+    },
+    "pe": {
+        "hostname": "pe-primary",
+        "as_number": 22222
+    },
+    "vrfs": [
+        {
+            "name": "data",
+            "rd": "11111:1111",
+            "ce_interface": "Gi0/0/1.100",
+            "ce_ip": "10.0.0.185",
+            "pe_interface": "Te0/1/0.100",
+            "pe_ip": "10.0.0.186"
+        },
+        {
+            "name": "voice",
+            "rd": "11111:2222",
+            "ce_interface": "Gi0/0/1.101",
+            "ce_ip": "10.0.0.189",
+            "pe_interface": "Te0/1/0.101",
+            "pe_ip": "10.0.0.190"
+        }
+    ]
+}

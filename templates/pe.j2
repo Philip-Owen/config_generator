@@ -1,0 +1,24 @@
+***** {{ pe.hostname }} *****
+
+---- Interfaces ----
+{% for vrf in vrfs %}
+
+interface {{ vrf.pe_interface }}
+	{% set vlan = vrf.pe_interface.split('.') %}
+	description link to {{ ce.hostname }} v{{vlan[1]}} - - {{ vrf.name }}
+	vrf {{ vrf.name }}
+	ipv4 mtu 1500
+	ipv4 address {{ vrf.pe_ip }} 255.255.255.252
+	encapsulation dot1q {{vlan[1]}}
+
+{% endfor %}
+
+---- BGP CONFIG ----
+router bgp {{ pe.as_number }}
+{% for vrf in vrfs %}
+	vrf {{ vrf.name }}
+		neighbor {{ vrf.ce_ip }}
+		remote-as {{ ce.as_number }}
+		description {{ ce.hostname }}
+		exit-address-family
+{% endfor %}

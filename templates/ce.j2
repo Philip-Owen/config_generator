@@ -1,0 +1,40 @@
+******* {{ ce.hostname }} *******
+
+! VRF DEFINITION
+
+{% for vrf in vrfs %}
+vrf definition {{ vrf.name }}
+  rd {{ vrf.rd }}
+!  
+{% endfor %}
+! L3 INTERFACES 
+!
+{% for vrf in vrfs %}
+interface {{ vrf.ce_interface }}
+  description link to {{ pe.hostname }} vrf-{{ vrf.name }}
+  vrf forwarding {{ vrf.name }}
+  {% if vrf.ce_interface|first != 'v' and vrf.ce_interface|first != 'V' %}
+  {% set vlan = vrf.ce_interface.split('.') %}
+  encapsulation dot1Q {{ vlan[1] }}
+  {% else %}
+  {% set vlan = vrf.ce_interface.split('n') %}
+  encapsulation dot1Q {{ vlan[1] }}
+  {% endif %}
+  ip address {{ vrf.ce_ip }} 255.255.255.252
+  no ip redirects
+  no ip proxy-arp
+  bfd interval 600 min_rx 800 multiplier 3
+!
+{% endfor %}
+!
+! BGP CONFIG 
+!
+router bgp {{ ce.as_number }}
+{% for vrf in vrfs %}
+  address-family ipv4 vrf {{ vrf.name }}
+    redistribute static
+    redistribute connected
+    neighbor {{ vrf.pe_ip }} remote-as {{ pe.as_number }}
+    neighbor {{ vrf.pe_ip }} description {{ pe.hostname }}
+    exit-address-family
+{% endfor %}
