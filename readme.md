@@ -1,4 +1,4 @@
-## Configuration Generator
+# Configuration Generator
 
 This is a Python script built to model the way you can build configuration files in Ansible. I found myself creating too many scripts to perform 
 different configuration tasks so I decided to condense those into a single and more modular codebase.
@@ -6,11 +6,16 @@ different configuration tasks so I decided to condense those into a single and m
 * Built on Python 3+.
 * Uses Jinja2 for templating and is the only dependency for now. Run `pip install -r requirements.txt` to install it.
 
+## Updates
+ - Both Single and Multiple template examples have been commited and linked at the bottom of the readme.
+ - Added functionality to generate host files from the inventory list. This cuts down on some of the time needed to create each `.json` file to match what is in the inventory list.
 
-#### ** This project in a nutshell **
+
+###  This project in a nutshell
+--- 
 The script looks for device names in the `inventory.txt` file and each device should be on it's own line.
 
-For every device listed in inventory, there needs to be a coresponding *.json* file in the hosts folder with the same name. 
+For every device listed in inventory, there needs to be a coresponding *.json* file in the hosts folder with the same name. You can create these individually or you can run `python3 -c 'from helpers import gen_hosts; gen_hosts()'` and your host files will be generated for you based on your inventory file.
 
 The hosts files are json objects that hold variables specific to each device listed in the inventory. These could be variables such as IP addresses, VLANs, device hostnames, etc. 
 * **FYI**, the device name used in the inventory file can be accessed in the templates with the variable name `inv_host`.
