@@ -9,6 +9,7 @@ different configuration tasks so I decided to condense those into a single and m
 ## Updates
  - Both Single and Multiple template examples have been commited and linked at the bottom of the readme.
  - Added functionality to generate host files from the inventory list. This cuts down on some of the time needed to create each `.json` file to match what is in the inventory list.
+ - The group variables `main.json` file can now be broken up into multiple files if desired. All `.json` files in the groups folder will be used to build the group variables object.
 
 
 ###  This project in a nutshell
@@ -20,7 +21,7 @@ For every device listed in inventory, there needs to be a coresponding *.json* f
 The hosts files are json objects that hold variables specific to each device listed in the inventory. These could be variables such as IP addresses, VLANs, device hostnames, etc. 
 * **FYI**, the device name used in the inventory file can be accessed in the templates with the variable name `inv_host`.
 
-The groups folder contains `main.json` which can contain variables that need to be shared between all devices in the inventory.
+The groups folder contains `main.json` which can contain variables that need to be shared between all devices in the inventory. 
 
 A big part of this process is defining your templates. The script is looking for *.j2* files in the templates folder and will be applying both the hosts and group variables to create the config files. There are two ways you can define which template to use: 
 1. If you need to apply the same template to all the devices in inventory, define a template variable in the `groups/main.json` file.
