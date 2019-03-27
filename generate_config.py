@@ -1,4 +1,4 @@
-from helpers import handleMissingDevice, createGroupedDict
+from helpers import handleMissingDevice, createGroupedDict, loadGroupParms
 from pathlib import Path
 import jinja2
 import json
@@ -11,7 +11,7 @@ def read_inventory(inv_file):
 
 def compile_params(inventory, env):
     for device in inventory:
-        group_params = json.load(open("./groups/main.json"))
+        group_params = loadGroupParms('./groups')
         device = device.rstrip()
         host_path = Path("./hosts/" + device + ".json")
         if host_path.is_file():
