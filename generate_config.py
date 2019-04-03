@@ -1,8 +1,9 @@
-from helpers import handleMissingDevice, createGroupedDict, loadGroupParms
+from helpers import handleMissingDevice, createGroupedDict, loadGroupParms, gen_hosts
 from pathlib import Path
 import jinja2
 import json
 import os
+import click
 
 def read_inventory(inv_file):
     f = open(inv_file)
@@ -28,7 +29,7 @@ def compile_params(inventory, env):
         else:
             handleMissingDevice(device)
 
-def main():
+def gen_config():
     # Create Jinja2 env
     env = jinja2.Environment(loader=jinja2.FileSystemLoader(searchpath="."), trim_blocks=True, lstrip_blocks=True)
     # Open and collect inventory
@@ -36,7 +37,23 @@ def main():
     # Build configuration files
     compile_params(inventory, env)
 
+@click.group()
+def main():
+    """ Generate configuration files """
+    click.secho("Working....")
+    pass
 
+@main.command()
+def create_hosts():
+    """ Creates .json files based on items listed in inventory.txt """
+    gen_hosts()
+    click.echo('Host files generated...')
+
+@main.command()
+def generate_configs():
+    """ Builds configuration files """
+    gen_config()
+    click.echo('Configuration files generated...')
 
 if __name__ == '__main__':
     main()
