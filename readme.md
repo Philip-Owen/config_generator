@@ -33,6 +33,6 @@ There are two Jinja2 templates in the templates folder, one for each item in our
 
 We've now got everything we need to run the script.
 
-Same process as last time, run `python3 generate_config.py`, and we should have two files in our `_generated` folder, `ce.cfg` and `pe.cfg`.
+Same process as last time, run `python3 generate_config.py generate-configs`, and we should have two files in our `_generated` folder, `ce.cfg` and `pe.cfg`.
 
 Let me know if this example is not clear enough or needs further explanation. I realize this may not have been the easiest example to visualize however, this is my most used 'multi template' script. Another good/similar use case for mulit templates would be if you were needing to configure multiple devices that perform different functions ex. routers and switches, or devices that contain the same basic variables but require different configuration syntax ex. multiple switches from different vendors.
