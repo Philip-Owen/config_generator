@@ -56,7 +56,7 @@ So far we've defined our inventory, created our host file, and created a templat
   "template": "interfaces.j2"
 }
 ```
-The script now has all it needs to generate the configuration files. In the terminal lets run `python3 generate_config.py`.
+The script now has all it needs to generate the configuration files. In the terminal lets run `python3 generate_config.py generate-configs`.
 
 We should now have two files under `_generated`
 ```
